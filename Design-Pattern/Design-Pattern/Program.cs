@@ -1,12 +1,9 @@
-﻿using System;
+﻿namespace Design_Pattern;
 
-namespace MyApp
+internal class Program
 {
-    internal class Program
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
-        {
-            Console.WriteLine("Hello World!");
-        }
+        Console.WriteLine("Hello World!");
     }
 }
