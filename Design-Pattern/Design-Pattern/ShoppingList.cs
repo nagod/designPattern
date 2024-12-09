@@ -4,12 +4,7 @@ namespace Design_Pattern;
 
 public class ShoppingList
 {
-    /*
-     * key = name des items
-     * value = Anzahl der zu Kaufenden items
-     * _shoppingItems = { {key: "Apfel", value: 3}, {key: "Birne", value:12}, ....}
-     */
-    private readonly Dictionary<string, int> _shoppingItems;
+    private readonly Dictionary<string, int> _shoppingItems; // _shoppingItems = { {key: "Apfel", value: 3}, {key: "Birne", value:12}, ....}
     
     private ShoppingList()
     {
@@ -23,12 +18,7 @@ public class ShoppingList
     public static ShoppingList Create(Dictionary<string, int> shoppingItems) => new ShoppingList(shoppingItems);
 
     public static ShoppingList Empty => new ShoppingList();
-
-    /// <summary>
-    /// Adds item name and amount to dictionary
-    /// </summary>
-    /// <param name="itemName"></param>
-    /// <param name="amount"></param>
+    
     public void AddItemToShoppingList(string itemName, int amount)
     {
         if (string.IsNullOrWhiteSpace(itemName))
@@ -45,11 +35,16 @@ public class ShoppingList
         {
             _shoppingItems[itemName] = amount;
         }
-        //_shoppingItems[itemName] = _shoppingItems.TryGetValue(itemName, out int currentAmount2) ? currentAmount2 + amount : amount;
     }
 
     public void RemoveItemFromShoppingList(string itemName, int amount)
     {
+        if (string.IsNullOrWhiteSpace(itemName))
+            throw new ArgumentException("Item name cannot be null or empty.", nameof(itemName));
+    
+        if (amount <= 0)
+            throw new ArgumentOutOfRangeException(nameof(amount), "Amount must be greater than zero.");       
+        
         if (!_shoppingItems.TryGetValue(itemName, out int currentAmount))
             return;
         
@@ -64,13 +59,7 @@ public class ShoppingList
             _shoppingItems[itemName] = newAmount;
         }
     }
-
-    /// <inheritdoc />
-    public override string ToString()
-    {
-        return string.Join(Environment.NewLine, _shoppingItems);
-    }
-
+    
     public static ShoppingList LoadShoppingList(string fileName)
     {
         if (!File.Exists(fileName))
@@ -79,10 +68,7 @@ public class ShoppingList
         string rawInput = File.ReadAllText(fileName);
 
         Dictionary<string,int>? deserialize = JsonSerializer.Deserialize<Dictionary<string, int>>(rawInput);
-        if (deserialize != null)
-            return ShoppingList.Create(deserialize);
-
-        return Empty;
+        return deserialize != null ? Create(deserialize) : Empty;
     }
 
     public void SaveToFile(string fileName, bool overwrite = true)
@@ -92,12 +78,18 @@ public class ShoppingList
         if (overwrite || !File.Exists(fileName))
         {
             File.WriteAllText(fileName, serialize);
-            Console.WriteLine($"Successfully saved to {fileName}");
+            Console.WriteLine($"Shopping list successfully saved to {fileName}");
         }
         else
         {
-            Console.WriteLine("File already exists. Enter a new name or set overwrite to true");
+            File.AppendAllText(fileName, serialize);
+            Console.WriteLine("Shopping list successfully added to an existing file");
         }
-            
+    }
+    
+    /// <inheritdoc />
+    public override string ToString()
+    {
+        return string.Join(Environment.NewLine, _shoppingItems);
     }
 }
