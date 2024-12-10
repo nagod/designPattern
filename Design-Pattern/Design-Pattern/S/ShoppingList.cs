@@ -1,10 +1,10 @@
 using System.Text.Json;
 
-namespace Design_Pattern;
+namespace Design_Pattern.S;
 
 public class ShoppingList
 {
-    private readonly Dictionary<string, int> _shoppingItems; // _shoppingItems = { {key: "Apfel", value: 3}, {key: "Birne", value:12}, ....}
+    private readonly Dictionary<string, int> _shoppingItems;
     
     private ShoppingList()
     {
