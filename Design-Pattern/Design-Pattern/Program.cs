@@ -1,9 +1,4 @@
-﻿using Design_Pattern.BASE;
-using Design_Pattern.S;
-using ShoppingList = Design_Pattern.BASE.ShoppingList;
-using ShoppinList_S = Design_Pattern.S.ShoppingList;
-
-
+﻿
 namespace Design_Pattern;
 
 public static class Program
@@ -13,44 +8,50 @@ public static class Program
         Product skateboard = new Product("skateboard", 49.99, ProductType.Allgemein);
         Product schwarzbrot = new Product("schwarzbrot", 2.99, ProductType.Backware);
         Product milch = new Product("milch", 1.99, ProductType.MilchProdukt);
+        
+        BASE.Order baseOrder = new BASE.Order();
+        
+        // Zahlungsmethode und Benachrichtigung festlegen
+        baseOrder.SetPaymentMethod("CreditCard");
+        baseOrder.SetNotificationMethod("Email");
+        
+        // Produkte hinzufügen
+        baseOrder.AddProduct(skateboard);
+        baseOrder.AddProduct(schwarzbrot);
+        baseOrder.AddProduct(milch);
+        
+        // Bestellung verarbeiten
+        baseOrder.ProcessOrder();
 
-        /* BASE
-        ShoppingList shoppingList = new ShoppingList("PayPal");
+        // 
+        S.Order order = new S.Order();
         
-        // lets go shopping
-        shoppingList.AddProduct(skateboard);
-        shoppingList.AddProduct(schwarzbrot);
-        shoppingList.AddProduct(milch);
-        shoppingList.CreateInvoice();
+        // // Produkte hinzufügen
+        order.AddProduct(skateboard);
+        order.AddProduct(schwarzbrot);
+        order.AddProduct(milch);
         
-        shoppingList.RemoveProduct(skateboard);
-        shoppingList.CreateInvoice();
+        // Zahlungsmethode und Benachrichtigung festlegen
+        S.NotificationService notificationService = new S.NotificationService("Email");
+        S.OrderProcessor orderProcessor = new S.OrderProcessor(notificationService, "PayPal");
         
-        shoppingList.PayOrder();
-        shoppingList.CreateInvoice();
-        
-        */
+        // Bestellung verarbeiten
+        orderProcessor.ProcessOrder(order);
 
-        /*
-        ShoppinList_S shoppingListS = new ShoppinList_S();
-        PaymentService paymentService = new PaymentService("PayPal");
-        InvoiceService invoiceService = new InvoiceService();
+
+        O.Order oOder = new O.Order();
         
+        // // Produkte hinzufügen
+        oOder.AddProduct(skateboard);
+        oOder.AddProduct(schwarzbrot);
+        oOder.AddProduct(milch);
+
+        O.NotificationService oNotificationService = new O.NotificationService("Email");
+        O.Interfaces.IPaymentProcessor paypalPayment = new O.PaymentModel.PayPalPayment();
+        O.OrderProcessor oOrderProcessor = new O.OrderProcessor(oNotificationService, paypalPayment);
         
-        shoppingListS.AddProduct(skateboard);
-        shoppingListS.AddProduct(schwarzbrot);
-        shoppingListS.AddProduct(milch);
-        
-        invoiceService.CreateInvoice(shoppingListS.Products);
-        paymentService.PayOrder(shoppingListS.TotalAmount);
-        */
-        
-        /* O
-         * 
-         */
-        
-        ShoppinList_S shoppingListS = new ShoppinList_S();
-        PaymentService paymentService = new PaymentService("PayPal");
-        InvoiceService invoiceService = new InvoiceService();
+        oOrderProcessor.ProcessOrder(oOder);
+
     }
 }
+

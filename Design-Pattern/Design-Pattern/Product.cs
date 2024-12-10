@@ -1,4 +1,4 @@
-namespace Design_Pattern.BASE;
+namespace Design_Pattern;
 
 public enum ProductType
 {
@@ -10,9 +10,10 @@ public enum ProductType
 public class Product(string name, double price, ProductType productType)
 {
     public string Name { get; } = name;
+
     public double Price { get; } = price;
+
     public ProductType Type { get; } = productType;
-    
 
     public override string ToString()
     {
