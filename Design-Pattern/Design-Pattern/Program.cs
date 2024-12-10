@@ -1,52 +1,56 @@
-﻿using Design_Pattern.O;
-using ShoppingList = Design_Pattern.O.ShoppingList;
+﻿using Design_Pattern.BASE;
+using Design_Pattern.S;
+using ShoppingList = Design_Pattern.BASE.ShoppingList;
+using ShoppinList_S = Design_Pattern.S.ShoppingList;
+
 
 namespace Design_Pattern;
 
-internal class Program
+public static class Program
 {
     private static void Main(string[] args)
     {
-        /* S
-        ShoppingList emptyShoppingList = ShoppingList.Empty;
+        Product skateboard = new Product("skateboard", 49.99, ProductType.Allgemein);
+        Product schwarzbrot = new Product("schwarzbrot", 2.99, ProductType.Backware);
+        Product milch = new Product("milch", 1.99, ProductType.MilchProdukt);
 
-        emptyShoppingList.AddItemToShoppingList("Apfel", 2);
-        emptyShoppingList.AddItemToShoppingList("Birne", 4);
-
-
-        Console.WriteLine("----Deine ShoppingList-----");
-        Console.WriteLine(emptyShoppingList);
-
-        try
-        {
-            const string FILE_NAME = @"/Users/denizd/Desktop/shoppinlist.txt";
-
-            ShoppingList loadedShoppingList = ShoppingList.LoadShoppingList(FILE_NAME);
-            Console.WriteLine("---Loaded ShoppingList");
-            Console.WriteLine(loadedShoppingList);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e.Message);
-        }
+        /* BASE
+        ShoppingList shoppingList = new ShoppingList("PayPal");
+        
+        // lets go shopping
+        shoppingList.AddProduct(skateboard);
+        shoppingList.AddProduct(schwarzbrot);
+        shoppingList.AddProduct(milch);
+        shoppingList.CreateInvoice();
+        
+        shoppingList.RemoveProduct(skateboard);
+        shoppingList.CreateInvoice();
+        
+        shoppingList.PayOrder();
+        shoppingList.CreateInvoice();
+        
         */
 
-        Product apple = new Product("apple", 199, ProductType.Allgemein);
-        Product banana = new Product("banana", 2500, ProductType.Allgemein);
-        Product milk = new Product("milk", 1.99, ProductType.MilchProdukt);
-       
-
-        ShoppingList shoppingList = ShoppingList.Create([apple, banana, milk]);
-        Product bread = new Product("schwarzbrot", 0.99, ProductType.Backware);
-        shoppingList.AddProduct(bread);
-
-        ShoppingList filterByType = shoppingList.GetItemsByType(ProductType.Allgemein);
-        ShoppingList filterByPrice = shoppingList.GetItemsByPrice(200);
-
-        Console.WriteLine(shoppingList);
-        Console.WriteLine();
-        Console.WriteLine(filterByType);
-        Console.WriteLine();
-        Console.WriteLine(filterByPrice);
+        /*
+        ShoppinList_S shoppingListS = new ShoppinList_S();
+        PaymentService paymentService = new PaymentService("PayPal");
+        InvoiceService invoiceService = new InvoiceService();
+        
+        
+        shoppingListS.AddProduct(skateboard);
+        shoppingListS.AddProduct(schwarzbrot);
+        shoppingListS.AddProduct(milch);
+        
+        invoiceService.CreateInvoice(shoppingListS.Products);
+        paymentService.PayOrder(shoppingListS.TotalAmount);
+        */
+        
+        /* O
+         * 
+         */
+        
+        ShoppinList_S shoppingListS = new ShoppinList_S();
+        PaymentService paymentService = new PaymentService("PayPal");
+        InvoiceService invoiceService = new InvoiceService();
     }
 }

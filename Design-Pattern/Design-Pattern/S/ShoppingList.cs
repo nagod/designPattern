@@ -1,95 +1,32 @@
-using System.Text.Json;
+using Design_Pattern.BASE;
 
 namespace Design_Pattern.S;
 
 public class ShoppingList
 {
-    private readonly Dictionary<string, int> _shoppingItems;
-    
-    private ShoppingList()
+    public List<Product> Products { get; private set; } = new List<Product>();
+
+    public double TotalAmount { get; private set; }
+
+    public void AddProduct(Product p)
     {
-        _shoppingItems = new Dictionary<string, int>();
-    }
-    private ShoppingList(Dictionary<string, int> inputList)
-    {
-        _shoppingItems = inputList;
+        Products.Add(p);
+        TotalAmount += p.Price;
     }
 
-    public static ShoppingList Create(Dictionary<string, int> shoppingItems) => new ShoppingList(shoppingItems);
-
-    public static ShoppingList Empty => new ShoppingList();
-    
-    public void AddItemToShoppingList(string itemName, int amount)
+    public void RemoveProduct(Product p)
     {
-        if (string.IsNullOrWhiteSpace(itemName))
-            throw new ArgumentException("Item name cannot be null or empty.", nameof(itemName));
-    
-        if (amount <= 0)
-            throw new ArgumentOutOfRangeException(nameof(amount), "Amount must be greater than zero.");
-        
-        if (_shoppingItems.TryGetValue(itemName, out int currentAmount))
+        if (Products.Count == 0) return;
+
+        Product? foundItem = Products.Find(x => x.Equals(p));
+        if (foundItem == null)
         {
-            _shoppingItems[itemName] = currentAmount + amount;
-        }
-        else
-        {
-            _shoppingItems[itemName] = amount;
-        }
-    }
-
-    public void RemoveItemFromShoppingList(string itemName, int amount)
-    {
-        if (string.IsNullOrWhiteSpace(itemName))
-            throw new ArgumentException("Item name cannot be null or empty.", nameof(itemName));
-    
-        if (amount <= 0)
-            throw new ArgumentOutOfRangeException(nameof(amount), "Amount must be greater than zero.");       
-        
-        if (!_shoppingItems.TryGetValue(itemName, out int currentAmount))
+            Console.WriteLine("Item could not be removed, because it was not present in your shopping list. ");
             return;
-        
-        int newAmount = currentAmount - amount;
-        
-        if (newAmount < 1)
-        {
-            _shoppingItems.Remove(itemName);
         }
-        else
-        {
-            _shoppingItems[itemName] = newAmount;
-        }
-    }
-    
-    public static ShoppingList LoadShoppingList(string fileName)
-    {
-        if (!File.Exists(fileName))
-            throw new FileNotFoundException("The file does not exists");
 
-        string rawInput = File.ReadAllText(fileName);
-
-        Dictionary<string,int>? deserialize = JsonSerializer.Deserialize<Dictionary<string, int>>(rawInput);
-        return deserialize != null ? Create(deserialize) : Empty;
-    }
-
-    public void SaveToFile(string fileName, bool overwrite = true)
-    {
-        string serialize = JsonSerializer.Serialize(_shoppingItems);
-
-        if (overwrite || !File.Exists(fileName))
-        {
-            File.WriteAllText(fileName, serialize);
-            Console.WriteLine($"Shopping list successfully saved to {fileName}");
-        }
-        else
-        {
-            File.AppendAllText(fileName, serialize);
-            Console.WriteLine("Shopping list successfully added to an existing file");
-        }
-    }
-    
-    /// <inheritdoc />
-    public override string ToString()
-    {
-        return string.Join(Environment.NewLine, _shoppingItems);
+        int removedItemsCount = Products.RemoveAll(x => x.Equals(p));
+        TotalAmount -= removedItemsCount * foundItem.Price;
+        Console.WriteLine($"{p.Name} has been deleted {removedItemsCount}-times.\nNew total amount {TotalAmount}\n");
     }
 }

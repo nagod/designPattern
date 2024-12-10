@@ -1,4 +1,4 @@
-namespace Design_Pattern.O;
+namespace Design_Pattern.BASE;
 
 public enum ProductType
 {
@@ -7,12 +7,12 @@ public enum ProductType
     Backware,
 }
 
-
 public class Product(string name, double price, ProductType productType)
 {
     public string Name { get; } = name;
     public double Price { get; } = price;
     public ProductType Type { get; } = productType;
+    
 
     public override string ToString()
     {
